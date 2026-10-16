@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.TaniMart" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.TaniMart.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/tanimart_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.TaniMart</item>
+        <item name="windowSplashScreenAnimatedIcon">
+            @drawable/logo
+        </item>
+    </style>
+</resources>

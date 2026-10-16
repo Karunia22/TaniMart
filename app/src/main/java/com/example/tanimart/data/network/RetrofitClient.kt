@@ -1,0 +1,107 @@
+package com.example.tanimart.data.network
+
+import com.example.tanimart.data.address.AddressApi
+import com.example.tanimart.data.auth.AccountApi
+import com.example.tanimart.data.auth.LoginApi
+import com.example.tanimart.data.auth.LogoutApi
+import com.example.tanimart.data.auth.RegisterApi
+import com.example.tanimart.data.auth.UserApi
+import com.example.tanimart.data.cart.CartApi
+import com.example.tanimart.data.cart.CartRepository
+import com.example.tanimart.data.checkout.CheckoutApi
+import com.example.tanimart.data.order.OrderApiService
+import com.example.tanimart.data.order.OrderRepository
+import com.example.tanimart.data.payment.PaymentApi
+import com.example.tanimart.data.product.ProductApi
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
+object RetrofitClient {
+
+    private const val BASE_URL =
+        "http://10.63.0.217:8000/api/"
+
+    private val client: OkHttpClient by lazy {
+
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.HEADERS
+        }
+
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .addInterceptor(logging)
+            .addInterceptor(
+                AuthInterceptor {
+                    TokenStorage.getToken()
+                }
+            )
+            .build()
+    }
+
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(
+                GsonConverterFactory.create()
+            )
+            .build()
+    }
+
+    val addressApi: AddressApi by lazy {
+        retrofit.create(AddressApi::class.java)
+    }
+
+    val loginApi: LoginApi by lazy {
+        retrofit.create(LoginApi::class.java)
+    }
+
+    val userApi: UserApi by lazy {
+        retrofit.create(UserApi::class.java)
+    }
+
+    val logoutApi: LogoutApi by lazy {
+        retrofit.create(LogoutApi::class.java)
+    }
+
+    val registerApi: RegisterApi by lazy {
+        retrofit.create(RegisterApi::class.java)
+    }
+
+    val productApi: ProductApi by lazy {
+        retrofit.create(ProductApi::class.java)
+    }
+
+    val cartApi: CartApi by lazy {
+        retrofit.create(CartApi::class.java)
+    }
+
+    val cartRepository: CartRepository by lazy {
+        CartRepository(cartApi)
+    }
+
+    val checkoutApi: CheckoutApi by lazy {
+        retrofit.create(CheckoutApi::class.java)
+    }
+
+    val paymentApi: PaymentApi by lazy {
+        retrofit.create(PaymentApi::class.java)
+    }
+
+    val orderApi: OrderApiService by lazy {
+        retrofit.create(OrderApiService::class.java)
+    }
+
+    val orderRepository: OrderRepository by lazy {
+        OrderRepository(orderApi)
+    }
+
+    val accountApi: AccountApi by lazy {
+        retrofit.create(AccountApi::class.java)
+    }
+}
