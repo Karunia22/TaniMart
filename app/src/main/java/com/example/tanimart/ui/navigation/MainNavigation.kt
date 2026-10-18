@@ -76,6 +76,7 @@ import com.example.tanimart.ui.profile.data.ProfileMenu
 import com.example.tanimart.ui.profile.state.ProfileViewModel
 import com.example.tanimart.ui.seller.SellerDashboardScreen
 import com.example.tanimart.ui.seller.data.SellerDashboardMenu
+import com.example.tanimart.ui.seller.orders.SellerOrdersScreen
 import com.example.tanimart.ui.seller.products.SellerProductFormScreen
 import com.example.tanimart.ui.seller.products.SellerProductsScreen
 import com.example.tanimart.ui.seller.products.components.MySellerProductItem
@@ -1053,6 +1054,20 @@ fun MainNavigation(startDestination: String) {
                     onProductCreated = {
                         navController.popBackStack()
                     }
+                )
+            }
+
+            composable(route = "seller_orders") {
+                SellerOrdersScreen(
+                    repository = RetrofitClient.orderRepository,
+
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+
+                    onOrderClick = { orderId ->
+                        navController.navigate("seller_order_detail/$orderId")
+                    },
                 )
             }
         }

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
     private const val BASE_URL =
-        "http://10.63.0.217:8000/api/"
+        "http://10.192.224.217:8000/api/"
 
     private val client: OkHttpClient by lazy {
 
