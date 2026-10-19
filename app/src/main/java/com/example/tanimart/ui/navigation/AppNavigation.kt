@@ -33,13 +33,15 @@ fun AppNavigation(){
 
         SessionState.Authenticated -> {
             MainNavigation(
-                startDestination = "home"
+                startDestination = "home",
+                sessionViewModel = sessionViewModel
             )
         }
 
         SessionState.Unauthenticated -> {
             MainNavigation(
-                startDestination = "login"
+                startDestination = "login",
+                sessionViewModel = sessionViewModel
             )
         }
 

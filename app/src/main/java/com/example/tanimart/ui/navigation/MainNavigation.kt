@@ -75,12 +75,18 @@ import com.example.tanimart.ui.product.ui.ProductLoadContent
 import com.example.tanimart.ui.profile.data.ProfileMenu
 import com.example.tanimart.ui.profile.state.ProfileViewModel
 import com.example.tanimart.ui.seller.SellerDashboardScreen
+import com.example.tanimart.ui.seller.application.SellerRegisterScreen
 import com.example.tanimart.ui.seller.data.SellerDashboardMenu
+import com.example.tanimart.ui.seller.orders.SellerOrderDetailScreen
 import com.example.tanimart.ui.seller.orders.SellerOrdersScreen
 import com.example.tanimart.ui.seller.products.SellerProductFormScreen
 import com.example.tanimart.ui.seller.products.SellerProductsScreen
 import com.example.tanimart.ui.seller.products.components.MySellerProductItem
 import com.example.tanimart.ui.seller.productsdetail.SellerProductDetailScreen
+import com.example.tanimart.ui.seller.sales.SellerSalesScreen
+import com.example.tanimart.ui.seller.stock.SellerStockScreen
+import com.example.tanimart.ui.seller.store.SellerSettingsScreen
+import com.example.tanimart.ui.seller.store.SellerStoreScreen
 
 
 private fun isMainMenu(route: String?): Boolean {
@@ -92,7 +98,10 @@ private fun isMainMenu(route: String?): Boolean {
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainNavigation(startDestination: String) {
+fun MainNavigation(
+    startDestination: String = "login",
+    sessionViewModel: com.example.tanimart.ui.auth.session.state.SessionViewModel? = null
+) {
 
     val navController = rememberNavController()
     val cartViewModel: CartViewModel = viewModel()
@@ -485,6 +494,9 @@ fun MainNavigation(startDestination: String) {
                             ProfileMenu.TOKO_SAYA ->{
                                 navController.navigate("seller_dashboard")
                             }
+                            ProfileMenu.DAFTAR_PENJUAL -> {
+                                navController.navigate("seller_register")
+                            }
                             ProfileMenu.LOGOUT -> {
                                 logoutViewModel.logout()
                             }
@@ -498,6 +510,8 @@ fun MainNavigation(startDestination: String) {
                 LaunchedEffect(logoutState) {
 
                     if (logoutState is LogoutState.Success) {
+                        sessionViewModel?.markLoggedOut()
+                        logoutViewModel.reset()
 
                         navController.navigate("login") {
 
@@ -611,6 +625,7 @@ fun MainNavigation(startDestination: String) {
                         navController.navigate("forgot_password")
                     },
                     onLoginSuccess = {
+                        sessionViewModel?.markAuthenticated()
                         navController.navigate("home") {
                             popUpTo("login") {
                                 inclusive = true
@@ -620,24 +635,7 @@ fun MainNavigation(startDestination: String) {
                     }
                 )
 
-                LaunchedEffect(Unit) {
-                    loginViewModel.uiEvent.collect { event ->
-                        when (event) {
 
-                            LoginUiEvent.LoginSuccess -> {
-                                navController.navigate("home") {
-                                    popUpTo("login") {
-                                        inclusive = true
-                                    }
-                                }
-                            }
-
-                            is LoginUiEvent.ShowValidationError -> {
-                                // nanti kita tampilkan Snackbar
-                            }
-                        }
-                    }
-                }
             }
 
             composable("register") {
@@ -675,7 +673,8 @@ fun MainNavigation(startDestination: String) {
                     },
 
                     onRegisterSuccess = {
-                        navController.navigate("login") {
+                        sessionViewModel?.markAuthenticated()
+                        navController.navigate("home") {
                             popUpTo("register") {
                                 inclusive = true
                             }
@@ -940,6 +939,19 @@ fun MainNavigation(startDestination: String) {
                 }
             }
 
+            composable("seller_register") {
+                SellerRegisterScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onOpenDashboard = {
+                        navController.navigate("seller_dashboard") {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+
             composable("seller_dashboard") {
                 val sellerProductViewModel: SellerProductViewModel = viewModel()
 
@@ -981,7 +993,7 @@ fun MainNavigation(startDestination: String) {
                         navController.popBackStack()
                     },
                     onAddProductClick = {
-                        navController.navigate("seller_add_product")
+                        navController.navigate("seller_product_form")
                     },
                     onProductClick = { product ->
                         navController.navigate(
@@ -1059,8 +1071,6 @@ fun MainNavigation(startDestination: String) {
 
             composable(route = "seller_orders") {
                 SellerOrdersScreen(
-                    repository = RetrofitClient.orderRepository,
-
                     onBackClick = {
                         navController.popBackStack()
                     },
@@ -1068,6 +1078,61 @@ fun MainNavigation(startDestination: String) {
                     onOrderClick = { orderId ->
                         navController.navigate("seller_order_detail/$orderId")
                     },
+                )
+            }
+
+            composable(
+                route = "seller_order_detail/{orderId}",
+                arguments = listOf(
+                    navArgument("orderId") {
+                        type = NavType.IntType
+                    }
+                )
+            ) { backStackEntry ->
+
+                val orderId = backStackEntry.arguments?.getInt("orderId")
+                    ?: return@composable
+
+                SellerOrderDetailScreen(
+                    orderId = orderId,
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(route = "seller_sales") {
+                SellerSalesScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(route = "seller_stock") {
+                SellerStockScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(route = "seller_store") {
+                SellerStoreScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onEditClick = {
+                        navController.navigate("seller_settings")
+                    }
+                )
+            }
+
+            composable(route = "seller_settings") {
+                SellerSettingsScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

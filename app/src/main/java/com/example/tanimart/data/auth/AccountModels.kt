@@ -11,7 +11,8 @@ data class AccountUser(
     val name: String,
     val email: String,
     val status: String,
-    val role: String
+    val role: String,
+    val roles: List<String> = emptyList()
 )
 
 data class PrimaryAddress(

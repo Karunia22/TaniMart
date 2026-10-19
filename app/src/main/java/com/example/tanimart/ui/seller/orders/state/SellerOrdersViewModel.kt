@@ -2,16 +2,19 @@ package com.example.tanimart.ui.seller.orders.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tanimart.data.network.RetrofitClient
 import com.example.tanimart.data.order.OrderRepository
+import com.example.tanimart.data.order.toUiModel
+import com.example.tanimart.ui.order.data.OrderFilter
+import com.example.tanimart.ui.order.data.OrderStatus
 import com.example.tanimart.ui.seller.orders.data.SellerOrdersUiState
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SellerOrdersViewModel(
-    private val repository: OrderRepository,
+    private val repository: OrderRepository = RetrofitClient.orderRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SellerOrdersUiState())
@@ -21,8 +24,8 @@ class SellerOrdersViewModel(
         loadOrders()
     }
 
-    fun selectStatus(status: String) {
-        _uiState.update { it.copy(selectedStatus = status) }
+    fun selectFilter(filter: OrderFilter) {
+        _uiState.update { it.copy(selectedFilter = filter) }
     }
 
     fun loadOrders() {
@@ -31,29 +34,27 @@ class SellerOrdersViewModel(
                 it.copy(isLoading = true, error = null)
             }
 
-            try {
-                repository.getSellerOrders()
-                    .onSuccess { response ->
-                        _uiState.update {
-                            it.copy(
-                                orders = response.orders,
-                                isLoading = false,
-                                error = null,
-                            )
-                        }
+            repository.getSellerOrders()
+                .onSuccess { response ->
+                    _uiState.update {
+                        it.copy(
+                            orders = response.orders.map { order ->
+                                order.toUiModel()
+                            },
+                            isLoading = false,
+                            error = null,
+                        )
                     }
-                    .onFailure { error ->
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                error = error.message
-                                    ?: "Gagal memuat pesanan.",
-                            )
-                        }
+                }
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = error.message
+                                ?: "Gagal memuat pesanan.",
+                        )
                     }
-            } catch (e: CancellationException) {
-                throw e
-            }
+                }
         }
     }
 
@@ -64,7 +65,7 @@ class SellerOrdersViewModel(
             .firstOrNull { it.id == orderId }
             ?: return
 
-        if (!order.status.equals("diproses", ignoreCase = true)) {
+        if (order.status != OrderStatus.DIPROSES) {
             return
         }
 
@@ -99,5 +100,4 @@ class SellerOrdersViewModel(
             }
         }
     }
-
 }

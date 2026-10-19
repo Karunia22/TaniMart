@@ -12,12 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.tanimart.ui.order.data.OrderFilter
 import com.example.tanimart.ui.seller.orders.data.SellerOrdersUiState
 
 @Composable
 fun SellerOrdersContent(
     uiState: SellerOrdersUiState,
-    onStatusSelected: (String) -> Unit,
+    onFilterSelected: (OrderFilter) -> Unit,
     onRetry: () -> Unit,
     onOrderClick: (Int) -> Unit,
     onBackClick: () -> Unit,
@@ -37,8 +38,8 @@ fun SellerOrdersContent(
         Spacer(Modifier.height(20.dp))
 
         SellerOrdersStatusFilter(
-            selectedStatus = uiState.selectedStatus,
-            onStatusSelected = onStatusSelected,
+            selectedFilter = uiState.selectedFilter,
+            onFilterSelected = onFilterSelected,
         )
 
         Spacer(Modifier.height(16.dp))

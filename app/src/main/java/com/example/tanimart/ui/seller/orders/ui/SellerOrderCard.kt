@@ -18,12 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.tanimart.data.order.SellerOrderDto
-import java.util.Locale
+import com.example.tanimart.ui.components.formatRupiah
+import com.example.tanimart.ui.order.data.OrderStatus
+import com.example.tanimart.ui.seller.orders.data.SellerOrderUiModel
 
 @Composable
 fun SellerOrderCard(
-    order: SellerOrderDto,
+    order: SellerOrderUiModel,
     onClick: (Int) -> Unit,
     onMarkAsShipped: (Int) -> Unit,
     isUpdating: Boolean = false,
@@ -45,14 +46,14 @@ fun SellerOrderCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = order.nomorOrder ?: "Pesanan #${order.id}",
+                    text = order.nomorOrder,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleSmall,
                 )
 
                 Text(
-                    text = order.status,
+                    text = order.status.label,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelMedium,
                 )
@@ -61,7 +62,7 @@ fun SellerOrderCard(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = order.user?.name ?: "Pelanggan",
+                text = order.customerName,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -70,7 +71,7 @@ fun SellerOrderCard(
 
             order.items.forEach { item ->
                 Text(
-                    text = "${item.product?.namaProduk ?: "Produk"} × ${item.jumlah}",
+                    text = "${item.namaProduk} × ${item.jumlah}",
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 3.dp),
@@ -90,19 +91,14 @@ fun SellerOrderCard(
                 )
 
                 Text(
-                    text = "Rp${
-                        "%,.0f".format(
-                            Locale("id", "ID"),
-                            order.totalHarga,
-                        )
-                    }",
+                    text = formatRupiah(order.totalHarga.toDouble()),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleSmall,
                 )
             }
 
-            if (order.status.equals("diproses", ignoreCase = true)) {
+            if (order.status == OrderStatus.DIPROSES) {
                 Spacer(Modifier.height(12.dp))
 
                 Button(

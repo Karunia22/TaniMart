@@ -30,6 +30,12 @@ fun OrderStatusBadge(
             colors.onPrimaryContainer
         )
 
+        OrderStatus.DIKIRIM -> Triple(
+            "Sedang dikirim",
+            colors.surfaceContainerHighest,
+            colors.onSurface
+        )
+
         OrderStatus.SELESAI -> Triple(
             "Selesai",
             colors.tertiaryContainer,

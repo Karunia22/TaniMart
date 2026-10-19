@@ -64,7 +64,19 @@ fun ProfileScreen(
             )
         }
 
-        items(ProfileMenu.entries) { menu ->
+        val menus = listOf(
+            ProfileMenu.ACCOUNT,
+            ProfileMenu.ADDRESS,
+            ProfileMenu.ORDER,
+            if (uiState.isSeller) {
+                ProfileMenu.TOKO_SAYA
+            } else {
+                ProfileMenu.DAFTAR_PENJUAL
+            },
+            ProfileMenu.LOGOUT
+        )
+
+        items(menus) { menu ->
             ProfileMenuItem(
                 menu = menu,
                 onClick = { onMenuClick(menu) }

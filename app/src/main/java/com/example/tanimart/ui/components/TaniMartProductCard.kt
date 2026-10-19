@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 fun TaniMartProductCard(
     name: String,
     price: String,
+    sellerName: String? = null,
     onClick: () -> Unit,
     modifier: Modifier = Modifier.Companion
 ) {
@@ -50,6 +51,14 @@ fun TaniMartProductCard(
                 text = name,
                 style = MaterialTheme.typography.titleMedium
             )
+
+            if (!sellerName.isNullOrBlank()) {
+                Text(
+                    text = "Toko: $sellerName",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
             Text(
                 text = price,

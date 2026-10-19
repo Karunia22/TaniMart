@@ -30,6 +30,10 @@ enum class ProfileMenu(
         label = "Toko Saya",
         icon = Icons.Default.Store
     ),
+    DAFTAR_PENJUAL(
+        label = "Daftar Jadi Penjual",
+        icon = Icons.Default.Store
+    ),
     LOGOUT(
         label = "Keluar",
         icon = Icons.Default.Logout

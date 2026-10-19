@@ -31,6 +31,7 @@ fun ProductGrid(
                     TaniMartProductCard(
                         name = product.name,
                         price = formatRupiah(product.price),
+                        sellerName = product.sellerName,
                         onClick = {
                             onProductClick(product.id)
                         },

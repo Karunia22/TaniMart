@@ -8,31 +8,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
-val sellerOrderStatuses = listOf(
-    "Semua",
-    "Menunggu Pembayaran",
-    "Diproses",
-    "Dikirim",
-    "Selesai",
-    "Dibatalkan",
-)
+import com.example.tanimart.ui.order.data.OrderFilter
 
 @Composable
 fun SellerOrdersStatusFilter(
-    selectedStatus: String,
-    onStatusSelected: (String) -> Unit,
+    selectedFilter: OrderFilter,
+    onFilterSelected: (OrderFilter) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(sellerOrderStatuses) { status ->
+        items(OrderFilter.entries) { filter ->
             FilterChip(
-                selected = selectedStatus == status,
-                onClick = { onStatusSelected(status) },
-                label = { Text(status) },
+                selected = selectedFilter == filter,
+                onClick = { onFilterSelected(filter) },
+                label = { Text(filter.label) },
             )
         }
     }

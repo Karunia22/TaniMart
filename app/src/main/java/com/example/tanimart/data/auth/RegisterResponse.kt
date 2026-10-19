@@ -26,6 +26,9 @@ data class RegisterUserResponse(
     @SerializedName("role")
     val role: String,
 
+    @SerializedName("roles")
+    val roles: List<String> = emptyList(),
+
     @SerializedName("status")
     val status: String
 )

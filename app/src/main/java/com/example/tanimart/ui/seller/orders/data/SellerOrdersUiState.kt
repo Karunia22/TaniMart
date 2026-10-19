@@ -1,20 +1,17 @@
 package com.example.tanimart.ui.seller.orders.data
 
-import com.example.tanimart.data.order.SellerOrderDto
+import com.example.tanimart.ui.order.data.OrderFilter
 
 data class SellerOrdersUiState(
-    val orders: List<SellerOrderDto> = emptyList(),
-    val selectedStatus: String = "Semua",
+    val orders: List<SellerOrderUiModel> = emptyList(),
+    val selectedFilter: OrderFilter = OrderFilter.SEMUA,
     val isLoading: Boolean = false,
     val error: String? = null,
     val updatingOrderIds: Set<Int> = emptySet(),
 ) {
-    val filteredOrders: List<SellerOrderDto>
-        get() = if (selectedStatus == "Semua") {
-            orders
-        } else {
-            orders.filter {
-                it.status.equals(selectedStatus, ignoreCase = true)
-            }
+    val filteredOrders: List<SellerOrderUiModel>
+        get() {
+            val status = selectedFilter.status ?: return orders
+            return orders.filter { it.status == status }
         }
 }

@@ -35,6 +35,18 @@ class SessionViewModel : ViewModel() {
         checkSession()
     }
 
+    fun refresh() {
+        checkSession()
+    }
+
+    fun markAuthenticated() {
+        _state.value = SessionState.Authenticated
+    }
+
+    fun markLoggedOut() {
+        _state.value = SessionState.Unauthenticated
+    }
+
     private fun checkSession() {
 
         val token = TokenStorage.getToken()
@@ -51,10 +63,19 @@ class SessionViewModel : ViewModel() {
 
                 _state.value = SessionState.Authenticated
 
+            } catch (e: retrofit2.HttpException) {
+                if (e.code() == 401 || e.code() == 403) {
+                    TokenStorage.clearToken()
+                    _state.value = SessionState.Unauthenticated
+                } else {
+                    _state.value = SessionState.Authenticated
+                }
+
+            } catch (e: java.io.IOException) {
+                _state.value = SessionState.Authenticated
+
             } catch (e: Exception) {
-
                 TokenStorage.clearToken()
-
                 _state.value = SessionState.Unauthenticated
             }
         }

@@ -13,6 +13,9 @@ import com.example.tanimart.data.order.OrderApiService
 import com.example.tanimart.data.order.OrderRepository
 import com.example.tanimart.data.payment.PaymentApi
 import com.example.tanimart.data.product.ProductApi
+import com.example.tanimart.data.seller.SalesApi
+import com.example.tanimart.data.seller.SellerApplicationApi
+import com.example.tanimart.data.seller.ShopApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,8 +24,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private const val BASE_URL =
-        "http://10.192.224.217:8000/api/"
+    private val BASE_URL: String
+        get() = ApiConfig.baseUrl
 
     private val client: OkHttpClient by lazy {
 
@@ -103,5 +106,17 @@ object RetrofitClient {
 
     val accountApi: AccountApi by lazy {
         retrofit.create(AccountApi::class.java)
+    }
+
+    val sellerApplicationApi: SellerApplicationApi by lazy {
+        retrofit.create(SellerApplicationApi::class.java)
+    }
+
+    val shopApi: ShopApi by lazy {
+        retrofit.create(ShopApi::class.java)
+    }
+
+    val salesApi: SalesApi by lazy {
+        retrofit.create(SalesApi::class.java)
     }
 }

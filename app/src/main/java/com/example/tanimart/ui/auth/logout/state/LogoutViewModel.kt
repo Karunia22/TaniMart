@@ -75,4 +75,8 @@ class LogoutViewModel : ViewModel() {
             }
         }
     }
+
+    fun reset() {
+        _state.value = LogoutState.Idle
+    }
 }
