@@ -120,14 +120,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            TextButton(
-                onClick = onForgotPasswordClick
-            ) {
-                Text(
-                    text = "Lupa password?",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

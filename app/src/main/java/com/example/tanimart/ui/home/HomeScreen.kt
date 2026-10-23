@@ -30,11 +30,8 @@ fun HomeScreen(
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-
         item {
-            TaniMartHomeHeader(
-                name = "Arjis"
-            )
+            TaniMartHomeHeader()
         }
 
         item {

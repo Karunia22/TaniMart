@@ -36,7 +36,7 @@ fun SellerSalesScreen(
 
     fun downloadReport(period: String, year: Int? = null) {
         val token = com.example.tanimart.data.network.TokenStorage.getToken() ?: ""
-        val base = "http://192.168.1.91:8000/api/seller/sales/report"
+        val base = "${com.example.tanimart.BuildConfig.API_BASE_URL}seller/sales/report"
         val url = buildString {
             append(base)
             append("?period=").append(period)

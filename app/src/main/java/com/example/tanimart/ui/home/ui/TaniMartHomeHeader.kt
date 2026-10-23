@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TaniMartHomeHeader(
-    name: String,
+   
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -20,7 +20,7 @@ fun TaniMartHomeHeader(
             .padding(vertical = 8.dp)
     ) {
         Text(
-            text = "Halo, $name 👋",
+            text = "Selamat Datang",
             style = MaterialTheme.typography.headlineSmall
         )
 

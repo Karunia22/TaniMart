@@ -16,6 +16,7 @@ import com.example.tanimart.data.product.ProductApi
 import com.example.tanimart.data.seller.SalesApi
 import com.example.tanimart.data.seller.SellerApplicationApi
 import com.example.tanimart.data.seller.ShopApi
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,7 +31,7 @@ object RetrofitClient {
     private val client: OkHttpClient by lazy {
 
         val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.HEADERS
+            level = HttpLoggingInterceptor.Level.BODY
         }
 
         OkHttpClient.Builder()
@@ -47,12 +48,14 @@ object RetrofitClient {
     }
 
     private val retrofit: Retrofit by lazy {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(
-                GsonConverterFactory.create()
-            )
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
